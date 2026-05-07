@@ -1,0 +1,150 @@
+/* Overlay */
+.modal-overlay-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Caja */
+.ventana-login {
+  background: #fff;
+  width: 380px;
+  border-radius: 15px;
+  padding: 25px;
+  position: relative;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+/* Cerrar */
+.btn-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Texto */
+.ventana-login h2 {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.sub-login {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 15px;
+}
+
+/* Admin */
+.alerta-admin {
+  background: #eaf3ff;
+  border: 1px solid #c7ddff;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.email-badge {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+/* Form */
+.formulario-datos {
+  display: flex;
+  flex-direction: column;
+}
+
+.formulario-datos label {
+  margin: 10px 0 5px;
+  font-size: 14px;
+}
+
+.formulario-datos input {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+}
+
+.formulario-datos input:focus {
+  border-color: #2563eb;
+}
+
+/* Botón */
+.btn-enviar-login {
+  margin-top: 15px;
+  padding: 12px;
+  background: #e57373;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-enviar-login:hover {
+  background: #d65c5c;
+}
+
+/* Separador */
+.separador {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+
+.separador span {
+  background: #fff;
+  padding: 0 10px;
+  color: #6b7280;
+}
+
+.separador::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #ddd;
+  z-index: -1;
+}
+
+/* Botones sociales */
+.btn-social {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  margin-bottom: 10px;
+  background: white;
+  cursor: pointer;
+}
+
+.btn-social:hover {
+  background: #f9fafb;
+}
+
+/* Link */
+.link-registro {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.link-registro span {
+  color: #e57373;
+  font-weight: bold;
+  cursor: pointer;
+}
