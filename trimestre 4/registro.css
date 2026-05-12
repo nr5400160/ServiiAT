@@ -1,38 +1,4 @@
-.ventana-registro {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 400px;
-  position: relative;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  text-align: center;
-}
-
-.btn-enviar-registro {
-  background-color: #2563eb;
-  color: white;
-  padding: 0.8rem;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: background 0.3s;
-}
-
-.btn-enviar-registro:hover {
-  background-color: #1d4ed8;
-}
-
-.footer-link {
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-  color: #666;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
+/* Fondo oscuro que cubre toda la pantalla */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -43,6 +9,85 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Añade esto: */
-  z-index: 9999; 
+  z-index: 1000;
+}
+
+/* Ventana del formulario */
+.ventana-registro-grande {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.ventana-registro-grande h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+/* Filas de inputs en paralelo */
+.flex-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Todos los inputs y selects */
+.input-field {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  border-color: #E57373;
+}
+
+.select-custom {
+  cursor: pointer;
+  background-color: white;
+}
+
+/* Botón de registro */
+.btn-enviar-registro {
+  width: 100%;
+  padding: 12px;
+  background-color: #E57373;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.2s;
+}
+
+.btn-enviar-registro:hover {
+  background-color: #c62828;
+}
+
+/* Enlace inferior */
+.footer-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: #E57373;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
 }
