@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "../App.css";
-import { cliente } from "../../supabase/cliente";
 
 function HistorialVersiones() {
 
@@ -8,49 +7,33 @@ function HistorialVersiones() {
   const [filtro, setFiltro] = useState("Todos");
 
   useEffect(() => {
+
     obtenerHistorial();
+
   }, []);
 
   async function obtenerHistorial() {
 
-    const { data, error } = await cliente
-      .from("solicitud")
-      .select(`
-        id_solicitud,
-        fecha_solicitud,
-        descripcion,
-        direccion_servicio,
+    try {
 
-        estado:id_estado_solicitud (
-          nombre_estado
-        ),
+      const res = await fetch(
+        "http://localhost:3001/api/historial"
+      );
 
-        equipo:id_equipo (
-          nombre_equipo,
-          marca_equipo,
-          modelo_equipo
-        ),
+      const data = await res.json();
 
-        cliente:usuario_id_cliente (
-          nombre_1,
-          apellido_1
-        )
-      `);
-
-    if (error) {
-
-      console.log("ERROR:", error);
-
-    } else {
-
-      console.log("DATOS:", data);
+      console.log(
+        "DATOS HISTORIAL:",
+        data
+      );
 
       const datosAdaptados = data.map((item) => ({
 
-        id: item.id_solicitud,
+        id:
+          item.id_solicitud,
 
         version:
-          item.equipo?.nombre_equipo || "Sin equipo",
+          item.nombre_equipo || "Sin equipo",
 
         fecha:
           item.fecha_solicitud,
@@ -59,57 +42,83 @@ function HistorialVersiones() {
           item.descripcion,
 
         estado:
-          item.estado?.nombre_estado || "Pendiente",
+          item.nombre_estado || "Pendiente",
 
         direccion:
           item.direccion_servicio,
 
         cliente:
-          item.cliente
-            ? item.cliente.nombre_1 +
-              " " +
-              item.cliente.apellido_1
-            : "Sin cliente",
+          item.nombre_1 +
+          " " +
+          item.apellido_1,
 
         marca:
-          item.equipo?.marca_equipo || "",
+          item.marca_equipo || "",
 
         modelo:
-          item.equipo?.modelo_equipo || ""
+          item.modelo_equipo || ""
 
       }));
 
       setVersiones(datosAdaptados);
+
+    } catch (error) {
+
+      console.log(
+        "ERROR HISTORIAL:",
+        error
+      );
     }
   }
 
   const datosFiltrados =
+
     filtro === "Todos"
+
       ? versiones
+
       : versiones.filter(
-          item => item.estado === filtro
+
+          item =>
+            item.estado === filtro
         );
 
   const total = versiones.length;
 
   const pendientes =
+
     versiones.filter(
-      v => v.estado === "Pendiente"
+
+      v =>
+        v.estado === "Pendiente"
+
     ).length;
 
   const proceso =
+
     versiones.filter(
-      v => v.estado === "En Proceso"
+
+      v =>
+        v.estado === "En Proceso"
+
     ).length;
 
   const completados =
+
     versiones.filter(
-      v => v.estado === "Completado"
+
+      v =>
+        v.estado === "Completado"
+
     ).length;
 
   const cancelados =
+
     versiones.filter(
-      v => v.estado === "Cancelado"
+
+      v =>
+        v.estado === "Cancelado"
+
     ).length;
 
   return (
@@ -117,7 +126,11 @@ function HistorialVersiones() {
     <div className="historial-container p-3">
 
       <div className="historial-header">
-        <h4>Historial de Solicitudes</h4>
+
+        <h4>
+          Historial de Solicitudes
+        </h4>
+
       </div>
 
       <div className="mb-3 filtros">
@@ -196,16 +209,21 @@ function HistorialVersiones() {
               className={
                 "badge-estado " +
 
-                (item.estado === "Pendiente"
+                (
+                  item.estado === "Pendiente"
+
                   ? "badge-pendiente"
 
                   : item.estado === "En Proceso"
+
                   ? "badge-proceso"
 
                   : item.estado === "Completado"
+
                   ? "badge-completado"
 
-                  : "badge-cancelado")
+                  : "badge-cancelado"
+                )
               }
             >
               {item.estado}
