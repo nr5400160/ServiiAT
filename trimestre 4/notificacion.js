@@ -1,23 +1,26 @@
-import dotenv from 'dotenv';
-// Al estar en la raíz, se queda como estaba originalmente
-dotenv.config({ path: '.env.local' });
-
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
 import db from './server/db.js';
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
+import https from 'https';
+import fs from 'fs'
+
+dotenv.config({ path: '.env.local' });
 
 // Verificación de variables en consola
 console.log("DB_HOST (Notificaciones):", process.env.DB_HOST);
 console.log("DB_USER (Notificaciones):", process.env.DB_USER);
 console.log("DB_NAME (Notificaciones):", process.env.DB_NAME);
 
+dotenv.config({ path: '.env.local' });
 const app = express();
-const PORT = 3001; // SE QUEDA EN EL PUERTO 3001
+const PORT = 3001; 
 
-// ===============================
+
 // MIDDLEWARES
-// ===============================
+
 app.use(express.json());
 
 app.use(cors({
@@ -26,27 +29,30 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// ===============================
+
 // CONFIGURACIÓN NODEMAILER
-// ===============================
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
-// ===============================
+
 // ENDPOINT NOTIFICACIONES (EMAIL)
-// ===============================
+
 app.post('/api/notificaciones/enviar', async (req, res) => {
   try {
-    const { emailCliente, estado } = req.body;
+    const { email, estado } = req.body;
     let mensaje = "";
 
     switch (estado) {
-      case "En proceso":
+      case "Pendiente":
         mensaje = "Hemos recibido tu solicitud. Nuestro equipo técnico la está evaluando.";
         break;
 
@@ -64,7 +70,7 @@ app.post('/api/notificaciones/enviar', async (req, res) => {
 
     const mailOpciones = {
       from: process.env.GMAIL_USER,
-      to: emailCliente,
+      to: email,
       subject: `AR Asistencia Técnica: Tu solicitud está ${estado}`,
       text: mensaje
     };
