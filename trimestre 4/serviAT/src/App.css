@@ -1,0 +1,438 @@
+/* ========== VARIABLES ========== */
+:root {
+  --azul-primario: #2563eb;
+  --azul-oscuro: #1e3a8a;
+  --salmon-ar: #f87171;
+  --azul-info-bg: #eff6ff;
+  --azul-info-border: #3173ca;
+}
+
+body {
+  background: #f9f7f7;
+}
+
+/* ========== BOTÓN CONTINUAR ========== */
+.btn-continuar {
+  background-image: linear-gradient(to right, #1e3a8a, #3b82f6);
+  color: rgba(236, 236, 236, 0.955);
+  border: none;
+}
+
+/* ========== CALENDARIO ========== */
+.react-calendar {
+  width: 100% !important;
+  max-width: 100%;
+  background: white;
+  border: none !important;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.125em;
+}
+
+.react-calendar__tile {
+  padding: 0.9em 0.1em !important;
+  font-size: 1.1rem;
+}
+
+.react-calendar__month-view__weekdays {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.react-calendar__navigation button {
+  font-size: 1.0rem !important;
+  font-weight: bold;
+}
+
+.form-control {
+  border: 2px solid #cbcaca;
+}
+
+/* ========== TOAST CONFIRMACIÓN ========== */
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.toast-confirmacion {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideDown 0.4s ease-out;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.toast-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2e7d32;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.toast-icon-container i {
+  color: white;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.toast-mensaje {
+  color: #1b5e20;
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* ========== TARJETAS INDEX (custom-card) ========== */
+.custom-card {
+  border-radius: 25px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+}
+
+.icon-box {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+}
+
+.icon-blue {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.icon-red {
+  background-color: #ff003c;
+}
+
+.custom-card a {
+  color: #0d6efd;
+}
+
+.custom-card a:hover {
+  color: #0a58ca;
+}
+
+/* ========== MENÚ LATERAL ADMIN ========== */
+.menu {
+  width: 280px;
+  height: 100vh;
+  background: #0944a3;
+  color: white;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 8px;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu .logo {
+  margin-bottom: 20px;
+}
+
+.menu button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 8px;
+  background: none;
+  border: none;
+  color: #fff;
+  text-align: left;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.menu button:hover {
+  background: #99aacc;
+}
+
+.colores {
+  text-align: left;
+}
+
+.cerrar {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cerrar:hover {
+  background: #dc2626;
+}
+
+/* ========== CONTENIDO ADMIN ========== */
+.contenido {
+  margin-left: 280px;
+  padding: 30px;
+  width: calc(100% - 280px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.subtitulo {
+  color: gray;
+  margin-bottom: 15px;
+}
+
+/* ========== CARDS DEL DASHBOARD ADMIN ========== */
+/*  Usa .contenedor-cards .card para NO interferir con Bootstrap .card */
+.contenedor-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.contenedor-cards .card {
+  flex: 1 1 180px;
+  min-width: 150px;
+  padding: 20px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.contenedor-cards .card h3 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.contenedor-cards .card p {
+  margin: 5px 0 0;
+}
+
+.azul {
+  background: #2563eb;
+}
+
+.amarillo {
+  background: #f59e0b;
+}
+
+.celeste {
+  background: #0ea5e9;
+}
+
+.verde {
+  background: #16a34a;
+}
+
+.rojo {
+  background: #dc2626;
+}
+
+.morado {
+  background: #7c3aed;
+}
+
+/* ========== TABLA ADMIN ========== */
+.tabla-contenedor {
+  background: white;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.tabla-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th {
+  text-align: left;
+  color: gray;
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+
+td {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.estado {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.pendiente {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.completado {
+  background: #bbf7d0;
+  color: #065f46;
+}
+
+.formulario {
+  margin: 18px 0;
+}
+
+.formulario input {
+  display: block;
+  margin: 5px 0;
+  padding: 8px;
+  width: 270px;
+}
+
+/* ========== CONFIGURACIÓN ADMIN ========== */
+.config-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+  margin-top: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.config-card {
+  background: #f3f4f6;
+  padding: 30px;
+  border-radius: 16px;
+  font-size: 18px;
+}
+
+.config-card h4 {
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 22px;
+}
+
+.config-card label {
+  display: block;
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.config-card input,
+.config-card textarea {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  font-size: 16px;
+  outline: none;
+}
+
+.config-card textarea {
+  min-height: 90px;
+  resize: none;
+}
+
+.config-card input:focus,
+.config-card textarea:focus {
+  border-color: #3b82f6;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.titulo-config {
+  text-align: center;
+  width: 100%;
+}
+
+.btn-guardar {
+  display: block;
+  margin: 30px auto;
+  width: 240px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.btn-guardar:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 995px) {
+  .menu {
+    width: 200px;
+  }
+
+  .contenido {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    position: absolute;
+    width: 180px;
+    height: auto;
+    z-index: 1000;
+  }
+
+  .contenido {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .app {
+    flex-direction: column;
+  }
+
+  .contenedor-cards {
+    flex-direction: column;
+  }
+}

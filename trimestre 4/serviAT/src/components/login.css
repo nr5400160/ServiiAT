@@ -1,0 +1,73 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.formulario-datos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.formulario-datos label {
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 600;
+}
+
+.formulario-datos input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.formulario-datos input:focus {
+  border-color: #E57373;
+}
+
+.btn-enviar-login {
+  width: 100%;
+  padding: 12px;
+  background-color: #E57373;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-enviar-login:hover {
+  background-color: #c62828;
+}
+
+.btn-cerrar {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.sub-login {
+  text-align: center;
+  color: #666;
+  font-size: 0.85rem;
+  margin: 0;
+}
