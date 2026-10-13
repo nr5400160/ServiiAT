@@ -164,7 +164,7 @@ app.post('/api/solicitud', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`🚀 Servidor con CORS listo en el puerto ${PORT}`));
-=======
+
 import dotenv from 'dotenv';
 // CRUCIAL: Cargar las variables antes de que se use la conexión de la base de datos
 dotenv.config({ path: '.env.local' });
