@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
@@ -373,4 +372,3 @@ app.listen(PORT, () => {
   console.log(`✅ Conexión lista para MySQL Workbench`);
   console.log(`==========================================`);
 });
->>>>>>> 22f4317d38e417facea8f8a672e74acba573c735
