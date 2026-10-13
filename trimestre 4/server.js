@@ -1,9 +1,8 @@
-import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import db from './server/db.js';// Tu conexión a Workbench
 
-const app = express();
+const app = require('express');
 const PORT = 3001; 
 
 
@@ -173,9 +172,6 @@ import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcryptjs';
 import db from './server/db.js';
-
-const app = express();
-const PORT = 3001; // Cambiado a 3001 para que sea tu servidor principal
 
 // ==========================================
 // MIDDLEWARES
