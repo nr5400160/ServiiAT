@@ -1,10 +1,12 @@
 import cors from 'cors';
+import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import db from './server/db.js';// Tu conexión a Workbench
 
 const app = require('express');
 const PORT = 3001; 
-
+// CRUCIAL: Cargar las variables antes de que se use la conexión de la base de datos
+dotenv.config({ path: '.env.local' });
 
 app.use(express.json()); // permite leer el req.body de los formularios
 
@@ -164,14 +166,9 @@ app.post('/api/solicitud', (req, res) => {
 
 app.listen(PORT, () => console.log(`🚀 Servidor con CORS listo en el puerto ${PORT}`));
 
-import dotenv from 'dotenv';
-// CRUCIAL: Cargar las variables antes de que se use la conexión de la base de datos
-dotenv.config({ path: '.env.local' });
 
-import express from 'express';
-import cors from 'cors';
-import bcrypt from 'bcryptjs';
-import db from './server/db.js';
+
+
 
 // ==========================================
 // MIDDLEWARES
