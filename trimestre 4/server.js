@@ -1,9 +1,10 @@
+import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import db from './server/db.js';// Tu conexión a Workbench
 
-const app = require('express');
+const app = express();
 const PORT = 3001; 
 // CRUCIAL: Cargar las variables antes de que se use la conexión de la base de datos
 dotenv.config({ path: '.env.local' });
