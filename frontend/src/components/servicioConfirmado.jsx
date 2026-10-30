@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from 'sweetalert2';
-import { cliente } from '../supabase/cliente'; // Importamos la conexión a Supabase
+
 
 function ServicioConfirmado() {
     const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import bcrypt from 'bcryptjs';
-import { cliente } from '../supabase/cliente';
+
 import "./login.css";
 
 
