@@ -1,4 +1,4 @@
-import HistorialVersiones from '../components/historialVersiones';
+import HistorialVersiones from '../../frontend/components/historialVersiones';
 function AdminDashboard() {
   return (
     <div className="container mt-4">

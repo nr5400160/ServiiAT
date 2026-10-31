@@ -4,7 +4,7 @@ import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-// import { cliente } from '../supabase/cliente'; // Ya no se necesita aquí
+
 
 function Formulario() {
     const [appliance, setAppliance] = useState("");

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Cards from "../components/Cards";
 import Tabla from "../components/Tabla";
-
 function Dashboard() {
   const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);

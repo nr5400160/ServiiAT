@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../App.css";
-import { cliente } from "../../supabase/cliente";
+
 
 function HistorialVersiones() {
 
