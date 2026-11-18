@@ -219,6 +219,537 @@ body {
   border-radius: 8px;
 }
 
+.ticket-recibo {
+  width: min(100%, 520px);
+  overflow: hidden;
+  color: #172554;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 20px;
+  box-shadow: 0 18px 45px rgba(30, 58, 138, 0.18);
+}
+
+.solicitud-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  color: #172554;
+  background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+  border: 1px solid #e5edf7;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px rgba(30, 58, 138, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.solicitud-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px rgba(30, 58, 138, 0.14);
+}
+
+.solicitud-card__cabecera {
+  display: flex;
+  min-height: 66px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #edf2f8;
+}
+
+.solicitud-card__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 11px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.solicitud-card__estado--pendiente {
+  color: #854d0e;
+  background: #fef3c7;
+}
+
+.solicitud-card__estado--proceso {
+  color: #075985;
+  background: #e0f2fe;
+}
+
+.solicitud-card__estado--finalizado {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.solicitud-card__estado--otro {
+  color: #475569;
+  background: #e2e8f0;
+}
+
+.solicitud-card__numero {
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-align: right;
+}
+
+.solicitud-card__contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.solicitud-card__equipo {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.solicitud-card__equipo-icono {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 48px;
+  place-items: center;
+  color: #1d4ed8;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1px solid #dbeafe;
+  border-radius: 15px;
+  font-size: 1.2rem;
+}
+
+.solicitud-card__equipo-info {
+  min-width: 0;
+}
+
+.solicitud-card__equipo-info > span,
+.solicitud-card__precio > div > span {
+  display: block;
+  margin-bottom: 3px;
+  color: #64748b;
+  font-size: 0.78rem;
+}
+
+.solicitud-card__equipo-info h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.08rem;
+  font-weight: 750;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.solicitud-card__fecha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  color: #64748b;
+  font-size: 0.78rem;
+}
+
+.solicitud-card__fecha > i {
+  color: #2563eb;
+}
+
+.solicitud-card__fecha strong {
+  color: #475569;
+  font-weight: 650;
+}
+
+.solicitud-card__problema {
+  margin-top: 18px;
+  padding: 14px 15px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 14px;
+}
+
+.solicitud-card__etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.solicitud-card__etiqueta i {
+  color: #2563eb;
+}
+
+.solicitud-card__problema p {
+  margin: 8px 0 0;
+  color: #334155;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.solicitud-card__pago {
+  margin-top: 18px;
+  padding: 16px;
+  background: linear-gradient(145deg, #f1f7ff 0%, #f5f7ff 100%);
+  border: 1px solid #dbeafe;
+  border-radius: 17px;
+}
+
+.solicitud-card__precio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.solicitud-card__precio strong {
+  display: block;
+  color: #123b88;
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.solicitud-card__precio-icono {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  color: #1d4ed8;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  border-radius: 13px;
+  font-size: 1.05rem;
+}
+
+.solicitud-card__formulario-pago {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.solicitud-card__formulario-pago label {
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.solicitud-card__select {
+  min-height: 44px;
+  margin-bottom: 3px;
+  color: #1e293b;
+  background-color: #fff;
+  border-color: #d7e2f0;
+  border-radius: 11px;
+  font-size: 0.88rem;
+}
+
+.solicitud-card__select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.solicitud-card__pagado {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.solicitud-card__precio-pendiente {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: 18px;
+  padding: 13px 14px;
+  color: #64748b;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 13px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.solicitud-card__precio-pendiente i {
+  margin-top: 2px;
+  color: #2563eb;
+}
+
+.solicitud-card__ubicacion {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: auto;
+  padding: 15px 20px 18px;
+  color: #475569;
+  background: #fbfdff;
+  border-top: 1px solid #edf2f8;
+}
+
+.solicitud-card__ubicacion > i {
+  margin-top: 2px;
+  color: #2563eb;
+}
+
+.solicitud-card__ubicacion div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.solicitud-card__ubicacion span {
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.solicitud-card__ubicacion strong {
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.ticket-encabezado {
+  padding: 26px 30px 24px;
+  color: white;
+  text-align: center;
+  background: linear-gradient(135deg, #123b88, #0e9f9a);
+}
+
+.ticket-marca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-bottom: 18px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.ticket-marca i {
+  font-size: 1.35rem;
+}
+
+.ticket-estado {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 5px 12px;
+  color: #075e46;
+  background: #d1fae5;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.ticket-encabezado h3 {
+  margin: 0 0 5px;
+  font-size: 1.45rem;
+  font-weight: 800;
+}
+
+.ticket-encabezado p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ticket-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px;
+  background: #eff6ff;
+  border-bottom: 1px dashed #93c5fd;
+}
+
+.ticket-total span,
+.ticket-total small {
+  color: #64748b;
+}
+
+.ticket-total strong {
+  margin: 3px 0;
+  color: #123b88;
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.ticket-detalles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 24px;
+  padding: 24px 30px;
+}
+
+.ticket-detalles div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ticket-detalles span {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.ticket-detalles strong {
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+}
+
+.ticket-detalles .ticket-direccion {
+  grid-column: 1 / -1;
+}
+
+.ticket-acciones {
+  padding: 0 30px 26px;
+  text-align: center;
+}
+
+.btn-pagar-servicio {
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: #fff;
+  font: inherit;
+  font-weight: 750;
+  background: linear-gradient(110deg, #123b88 0%, #2563eb 58%, #0e9f9a 100%);
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.btn-pagar-servicio:hover:not(:disabled) {
+  color: #fff;
+  filter: saturate(1.12);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(37, 99, 235, 0.32);
+}
+
+.btn-pagar-servicio:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.btn-pagar-servicio:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 5px 12px rgba(37, 99, 235, 0.24);
+}
+
+.btn-pagar-servicio:disabled {
+  color: #fff;
+  cursor: wait;
+  opacity: 0.82;
+}
+
+.btn-pagar-icono {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  align-items: center;
+  justify-content: center;
+  color: #1d4ed8;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.btn-pagar-texto {
+  flex: 1;
+  text-align: center;
+}
+
+.btn-pagar-flecha {
+  font-size: 1.2rem;
+  transition: transform 180ms ease;
+}
+
+.btn-pagar-servicio:hover:not(:disabled) .btn-pagar-flecha {
+  transform: translateX(3px);
+}
+
+@media (max-width: 480px) {
+  .solicitud-card__cabecera {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .solicitud-card__contenido {
+    padding: 17px;
+  }
+
+  .solicitud-card__ubicacion {
+    padding-right: 17px;
+    padding-left: 17px;
+  }
+
+  .ticket-encabezado {
+    padding: 24px 18px 20px;
+  }
+
+  .ticket-detalles {
+    gap: 16px;
+    padding: 22px 18px;
+  }
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .ticket-recibo,
+  .ticket-recibo * {
+    visibility: visible;
+  }
+
+  .ticket-recibo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-width: 520px;
+    box-shadow: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .ticket-acciones {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .solicitud-card,
+  .btn-pagar-servicio,
+  .btn-pagar-flecha {
+    transition: none;
+  }
+}
+
 
 .contenedor-gradiente {
   background: linear-gradient(135deg, #eff6ff 0%, #eef2ff 50%, #dbeafe 100%);

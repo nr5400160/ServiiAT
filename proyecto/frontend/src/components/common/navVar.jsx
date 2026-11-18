@@ -12,6 +12,7 @@ function Navbar({ setEstaAutenticado, setRol }) {
     sessionStorage.removeItem("rol");
     sessionStorage.removeItem("id_usuario");
     sessionStorage.removeItem("user");
+    sessionStorage.removeItem("userEmail");
 
     setEstaAutenticado(false);
     if (setRol) setRol(null);
@@ -63,14 +64,26 @@ function Navbar({ setEstaAutenticado, setRol }) {
                     Configuración
                   </NavLink>
                 </li>
+                <li className="nav-item me-2">
+                  <NavLink to="/perfil" className={({ isActive }) => claseActiva(isActive)} style={({ isActive }) => estiloActivo(isActive)}>
+                    Mi perfil
+                  </NavLink>
+                </li>
               </>
             ) : rol === 'tecnico' ? (
               /* MENÚ TÉCNICO */
-              <li className="nav-item me-2">
-                <NavLink to="/tecnico" className={({ isActive }) => claseActiva(isActive)} style={({ isActive }) => estiloActivo(isActive)}>
-                  Panel de Técnico
-                </NavLink>
-              </li>
+              <>
+                <li className="nav-item me-2">
+                  <NavLink to="/tecnico" className={({ isActive }) => claseActiva(isActive)} style={({ isActive }) => estiloActivo(isActive)}>
+                    Panel de Técnico
+                  </NavLink>
+                </li>
+                <li className="nav-item me-2">
+                  <NavLink to="/perfil" className={({ isActive }) => claseActiva(isActive)} style={({ isActive }) => estiloActivo(isActive)}>
+                    Mi perfil
+                  </NavLink>
+                </li>
+              </>
             ) : (
               /* MENÚ CLIENTE / PÚBLICO */
               <>
@@ -93,6 +106,13 @@ function Navbar({ setEstaAutenticado, setRol }) {
                   <li className="nav-item me-2">
                     <NavLink to="/ClienteHistorial" className={({ isActive }) => claseActiva(isActive)} style={({ isActive }) => estiloActivo(isActive)}>
                       Mis Solicitudes
+                    </NavLink>
+                  </li>
+                )}
+                {estaAutenticado && (
+                  <li className="nav-item me-2">
+                    <NavLink to="/perfil" className={({ isActive }) => claseActiva(isActive)} style={({ isActive }) => estiloActivo(isActive)}>
+                      Mi perfil
                     </NavLink>
                   </li>
                 )}

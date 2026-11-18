@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js';
+import { getSupabaseAdmin } from '../config/supabaseAdmin.js';
 import bcrypt from "bcryptjs";
 
 // ==========================================
@@ -6,11 +7,13 @@ import bcrypt from "bcryptjs";
 // ==========================================
 export const obtenerSolicitudes = async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data, error } = await supabaseAdmin
       .from('solicitud')
       .select(`
-        id_solicitud, 
+        id_solicitud,
         fecha_solicitud, 
+        hora_servicio,
         descripcion, 
         direccion_servicio,
         id_estado_solicitud,
@@ -26,15 +29,54 @@ export const obtenerSolicitudes = async (req, res) => {
 
     if (error) throw error;
 
+    const ordenesPorSolicitud = new Map();
+    const solicitudesIds = data.map((solicitud) => solicitud.id_solicitud);
+    if (solicitudesIds.length > 0) {
+      const { data: ordenes, error: ordenesError } = await supabaseAdmin
+        .from('orden_servicio')
+        .select('id_solicitud, usuario_id_tecnico')
+        .in('id_solicitud', solicitudesIds);
+
+      if (ordenesError) throw ordenesError;
+      for (const orden of ordenes || []) {
+        ordenesPorSolicitud.set(orden.id_solicitud, orden);
+      }
+    }
+
+    const tecnicosIds = [...new Set(
+      [...ordenesPorSolicitud.values()]
+        .map((orden) => orden.usuario_id_tecnico)
+        .filter((id) => id !== null && id !== undefined)
+        .map(Number)
+    )];
+    const tecnicosPorId = new Map();
+    if (tecnicosIds.length > 0) {
+      const { data: tecnicos, error: tecnicosError } = await supabaseAdmin
+        .from('usuario')
+        .select('id_usuario, nombre_1, apellido_1')
+        .in('id_usuario', tecnicosIds);
+
+      if (tecnicosError) throw tecnicosError;
+      for (const tecnico of tecnicos || []) {
+        tecnicosPorId.set(Number(tecnico.id_usuario), tecnico);
+      }
+    }
+
     const resultadoPlano = data.map(s => {
       const correos = s.usuario?.correo_electronico;
       const emailCliente = Array.isArray(correos)
         ? correos[0]?.direccion_email
         : correos?.direccion_email;
+      const orden = ordenesPorSolicitud.get(s.id_solicitud);
+      const idTecnicoAsignado = orden?.usuario_id_tecnico ?? null;
+      const tecnico = idTecnicoAsignado
+        ? tecnicosPorId.get(Number(idTecnicoAsignado))
+        : null;
 
       return {
         id_solicitud: s.id_solicitud,
         fecha_solicitud: s.fecha_solicitud,
+        hora_servicio: s.hora_servicio,
         descripcion: s.descripcion,
         direccion_servicio: s.direccion_servicio,
         id_estado_solicitud: s.id_estado_solicitud,
@@ -43,7 +85,11 @@ export const obtenerSolicitudes = async (req, res) => {
         marca_equipo: s.equipo?.marca_equipo || "N/A",
         nombre_1: s.usuario?.nombre_1 || "Cliente",
         apellido_1: s.usuario?.apellido_1 || "",
-        email: emailCliente || ""
+        email: emailCliente || "",
+        id_tecnico_asignado: idTecnicoAsignado,
+        nombre_tecnico: tecnico
+          ? `${tecnico.nombre_1 || ""} ${tecnico.apellido_1 || ""}`.trim()
+          : ""
       };
     });
 
@@ -55,45 +101,166 @@ export const obtenerSolicitudes = async (req, res) => {
   }
 };
 
-// ==========================================
-// 2. ACTUALIZAR ESTADO DE SOLICITUD (ADMIN)
-// ==========================================
-export const actualizarEstado = async (req, res) => {
-  const { id } = req.params;
-  const { id_estado, nombre_estado } = req.body;
+export const obtenerTecnicos = async (req, res) => {
+  try {
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data, error } = await supabaseAdmin
+      .from('usuario')
+      .select('id_usuario, nombre_1, apellido_1')
+      .eq('id_roles', 2)
+      .order('nombre_1', { ascending: true });
+
+    if (error) throw error;
+    res.json((data || []).map((tecnico) => ({
+      id_usuario: tecnico.id_usuario,
+      nombre: `${tecnico.nombre_1 || ""} ${tecnico.apellido_1 || ""}`.trim() || "Técnico"
+    })));
+  } catch (error) {
+    console.error("Error al obtener técnicos para asignación:", error);
+    res.status(500).json({ error: "No se pudo cargar la lista de técnicos." });
+  }
+};
+
+export const resolverSolicitud = async (req, res) => {
+  const idSolicitud = Number(req.params.id);
+  const decision = req.body?.decision;
+  const idTecnico = Number(req.body?.id_tecnico);
+
+  if (!Number.isSafeInteger(idSolicitud) || idSolicitud <= 0) {
+    return res.status(400).json({ error: "La solicitud indicada no es válida." });
+  }
+  if (!["aprobar", "rechazar"].includes(decision)) {
+    return res.status(400).json({ error: "Selecciona aprobar o rechazar la solicitud." });
+  }
+  if (decision === "aprobar" && (!Number.isSafeInteger(idTecnico) || idTecnico <= 0)) {
+    return res.status(400).json({ error: "Selecciona un técnico válido para asignar el servicio." });
+  }
 
   try {
-    let idEstadoFinal = id_estado;
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data: solicitud, error: solicitudError } = await supabaseAdmin
+      .from('solicitud')
+      .select('id_solicitud, fecha_solicitud, hora_servicio, id_estado_solicitud, estado(nombre_estado)')
+      .eq('id_solicitud', idSolicitud)
+      .maybeSingle();
 
-    if (nombre_estado) {
-      const { data: estadoRow } = await supabase
+    if (solicitudError) throw solicitudError;
+    if (!solicitud) {
+      return res.status(404).json({ error: "No se encontró la solicitud." });
+    }
+    if (solicitud.estado?.nombre_estado !== "Pendiente") {
+      return res.status(409).json({ error: "Solo se pueden resolver solicitudes pendientes." });
+    }
+
+    const { data: ordenExistente, error: ordenError } = await supabaseAdmin
+      .from('orden_servicio')
+      .select('id_orden_servicio, usuario_id_tecnico')
+      .eq('id_solicitud', idSolicitud)
+      .maybeSingle();
+
+    if (ordenError) throw ordenError;
+
+    if (decision === "rechazar") {
+      if (ordenExistente?.usuario_id_tecnico) {
+        return res.status(409).json({ error: "La solicitud ya fue asignada a un técnico." });
+      }
+
+      const { data: estadoCancelado, error: estadoError } = await supabaseAdmin
         .from('estado')
-        .select('*')
-        .eq('nombre_estado', nombre_estado)
+        .select('id_estado')
+        .eq('nombre_estado', 'Cancelado')
         .single();
 
-      if (estadoRow) {
-        idEstadoFinal = estadoRow.id_estado_solicitud || estadoRow.id_estado;
+      if (estadoError) throw estadoError;
+
+      const { data: solicitudActualizada, error: actualizarError } = await supabaseAdmin
+        .from('solicitud')
+        .update({ id_estado_solicitud: estadoCancelado.id_estado })
+        .eq('id_solicitud', idSolicitud)
+        .eq('id_estado_solicitud', solicitud.id_estado_solicitud)
+        .select('id_solicitud')
+        .maybeSingle();
+
+      if (actualizarError) throw actualizarError;
+      if (!solicitudActualizada) {
+        return res.status(409).json({ error: "La solicitud cambió mientras se procesaba. Actualiza el panel." });
+      }
+
+      return res.json({
+        mensaje: "Solicitud rechazada.",
+        solicitud: { id_solicitud: idSolicitud, nombre_estado: "Cancelado" }
+      });
+    }
+
+    const { data: tecnico, error: tecnicoError } = await supabaseAdmin
+      .from('usuario')
+      .select('id_usuario, id_roles')
+      .eq('id_usuario', idTecnico)
+      .maybeSingle();
+
+    if (tecnicoError) throw tecnicoError;
+    if (!tecnico || Number(tecnico.id_roles) !== 2) {
+      return res.status(400).json({ error: "El usuario seleccionado no es un técnico válido." });
+    }
+    if (ordenExistente?.usuario_id_tecnico) {
+      if (Number(ordenExistente.usuario_id_tecnico) !== idTecnico) {
+        return res.status(409).json({ error: "La solicitud ya está asignada a otro técnico." });
       }
     }
 
-    const { data, error } = await supabase
-      .from('solicitud')
-      .update({ id_estado_solicitud: idEstadoFinal })
-      .eq('id_solicitud', id)
-      .select()
-      .single();
+    const datosOrden = {
+      fecha_orden: solicitud.fecha_solicitud,
+      hora_servicio: solicitud.hora_servicio || "09:00:00",
+      id_estado_orden: solicitud.id_estado_solicitud,
+      usuario_id_tecnico: idTecnico
+    };
 
-    if (error) throw error;
+    if (!ordenExistente?.usuario_id_tecnico) {
+      if (ordenExistente) {
+        const { data: ordenAsignada, error: asignarError } = await supabaseAdmin
+          .from('orden_servicio')
+          .update(datosOrden)
+          .eq('id_orden_servicio', ordenExistente.id_orden_servicio)
+          .is('usuario_id_tecnico', null)
+          .select('id_orden_servicio')
+          .maybeSingle();
 
-    res.json({
-      mensaje: "Estado actualizado correctamente",
-      solicitud: data
+        if (asignarError) throw asignarError;
+        if (!ordenAsignada) {
+          return res.status(409).json({ error: "Otro administrador asignó esta solicitud. Actualiza el panel." });
+        }
+      } else {
+        const { error: crearOrdenError } = await supabaseAdmin
+          .from('orden_servicio')
+          .insert([{
+            id_solicitud: idSolicitud,
+            precio_servicio: 0,
+            ...datosOrden
+          }]);
+
+        if (crearOrdenError?.code === "23505") {
+          return res.status(409).json({ error: "Otro administrador asignó esta solicitud. Actualiza el panel." });
+        }
+        if (crearOrdenError) throw crearOrdenError;
+      }
+    }
+
+    return res.json({
+      mensaje: ordenExistente?.usuario_id_tecnico
+        ? "La solicitud ya estaba aprobada y asignada a este técnico."
+        : "Solicitud aprobada y asignada al técnico.",
+      solicitud: {
+        id_solicitud: idSolicitud,
+        id_tecnico_asignado: idTecnico,
+        nombre_estado: "Pendiente"
+      }
     });
-
   } catch (error) {
-    console.error("❌ Error al actualizar estado:", error.message);
-    res.status(500).json({ error: error.message });
+    console.error("Error al aprobar/rechazar una solicitud:", error);
+    return res.status(500).json({
+      error: "No se pudo resolver la solicitud.",
+      detalle: error.message
+    });
   }
 };
 

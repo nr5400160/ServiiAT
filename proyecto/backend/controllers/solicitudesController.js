@@ -3,8 +3,20 @@ import { supabase } from '../config/supabase.js';
 export const crearSolicitud = async(req, res) => {
   const {
     equipo, modelo, categoria, fecha,
-    descripcion, direccion, id_cliente
+    descripcion, direccion, id_cliente, hora_servicio
   } = req.body;
+
+  const horaCoincide = typeof hora_servicio === 'string'
+    ? hora_servicio.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+    : null;
+
+  if (!horaCoincide || Number(horaCoincide[1]) < 1 || Number(horaCoincide[1]) > 12) {
+    return res.status(400).json({ error: 'Selecciona una hora de servicio válida.' });
+  }
+
+  const hora12 = Number(horaCoincide[1]) % 12;
+  const hora24 = hora12 + (horaCoincide[3].toUpperCase() === 'PM' ? 12 : 0);
+  const horaServicioDb = `${String(hora24).padStart(2, '0')}:${horaCoincide[2]}:00`;
 
   try {
     // 1. Buscar el ID de la categoría (Corregido a minúscula: nombre_categoria)
@@ -51,7 +63,8 @@ export const crearSolicitud = async(req, res) => {
         usuario_id_administrador: idAdministrador, 
         usuario_id_cliente: id_cliente, 
         id_estado_solicitud: estadoData.id_estado, 
-        id_equipo: idDelNuevoEquipo
+        id_equipo: idDelNuevoEquipo,
+        hora_servicio: horaServicioDb
       }])
       .select();
 

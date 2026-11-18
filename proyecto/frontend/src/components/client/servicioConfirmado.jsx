@@ -2,6 +2,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Swal from 'sweetalert2';
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 function ServicioConfirmado() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -22,13 +24,13 @@ function ServicioConfirmado() {
     const confirmarReserva = async () => {
         setCargando(true);
         try {
-            const userGuardado = JSON.parse(localStorage.getItem("user"));
+            const userGuardado = JSON.parse(sessionStorage.getItem("user"));
             if (!userGuardado) {
                 throw new Error("Debes iniciar sesión para agendar un servicio.");
             }
 
             // Hacemos una única petición a tu backend en Node
-          const respuesta = await fetch('http://localhost:3001/api/solicitud', {
+          const respuesta = await fetch(`${API_URL}/api/solicitud`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -38,7 +40,8 @@ function ServicioConfirmado() {
                     fecha: datos.fecha,
                     descripcion: datos.descripcion,
                     direccion: datos.direccion,
-                    id_cliente: userGuardado.id
+                    id_cliente: userGuardado.id,
+                    hora_servicio: datos.hora
                 })
             });
 
@@ -49,7 +52,7 @@ function ServicioConfirmado() {
 
             // Notificación vía correo
             try {
-                await fetch('http://localhost:3001/api/notificaciones/enviar', {
+                await fetch(`${API_URL}/api/notificaciones/enviar`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

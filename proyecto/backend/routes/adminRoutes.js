@@ -1,11 +1,19 @@
 import { Router } from 'express';
-import { obtenerSolicitudes, actualizarEstado } from '../controllers/adminController.js';
-import { registrarUsuarioPorAdmin } from '../controllers/adminController.js';
+import {
+  obtenerSolicitudes,
+  obtenerTecnicos,
+  registrarUsuarioPorAdmin,
+  resolverSolicitud
+} from '../controllers/adminController.js';
+import { requireAuth, requireRole } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
+router.use('/admin', requireAuth, requireRole('administrador'));
+
 router.get('/admin/solicitudes', obtenerSolicitudes);
-router.put('/admin/solicitudes/:id/estado', actualizarEstado);
+router.get('/admin/tecnicos', obtenerTecnicos);
+router.put('/admin/solicitudes/:id/decision', resolverSolicitud);
 router.post('/admin/crear-usuario', registrarUsuarioPorAdmin);
 
 export default router;

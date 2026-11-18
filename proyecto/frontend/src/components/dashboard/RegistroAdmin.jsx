@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "../../pages/registro.css";
+import "../../pages/AdminRegistro.css";
 
 const RegistroAdmin = () => {
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,10 @@ const RegistroAdmin = () => {
       // Apunta al nuevo endpoint protegido que creaste en el backend
       const resp = await fetch("http://localhost:3001/api/admin/crear-usuario", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`
+        },
         body: JSON.stringify(payload)
       });
 
@@ -72,73 +76,139 @@ const RegistroAdmin = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h2 style={{ color: '#0d47a1', borderBottom: '2px solid #0d47a1', paddingBottom: '10px' }}>
-        Registrar Nuevo Personal
-      </h2>
-      <p style={{ color: '#666', marginBottom: '20px' }}>
-        El sistema generará una contraseña segura automáticamente y se la enviará al empleado por correo electrónico.
-      </p>
+    <section className="registro-personal">
+      <header className="registro-personal__encabezado">
+        <span className="registro-personal__icono">
+          <i className="bi bi-person-plus-fill" aria-hidden="true"></i>
+        </span>
+        <div>
+          <span className="registro-personal__eyebrow">GESTIÓN DE PERSONAL</span>
+          <h1>Registrar nuevo empleado</h1>
+          <p>Completa la información para crear una cuenta de trabajo.</p>
+        </div>
+      </header>
 
       {mensaje && (
-        <div style={{ backgroundColor: '#d4edda', color: '#155724', padding: '10px', borderRadius: '5px', marginBottom: '15px' }}>
+        <div className="registro-personal__mensaje" role="status">
+          <i className="bi bi-check-circle-fill" aria-hidden="true"></i>
           {mensaje}
         </div>
       )}
 
-      <form className="formulario-datos" style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }} onSubmit={handleSubmit}>
-        
-        <div className="flex-row">
-          <input className="input-field" type="text" placeholder="Primer Nombre*" required value={formData.nombre_1} onChange={handleChange('nombre_1')} />
-          <input className="input-field" type="text" placeholder="Segundo Nombre" value={formData.nombre_2} onChange={handleChange('nombre_2')} />
-        </div>
-
-        <div className="flex-row">
-          <input className="input-field" type="text" placeholder="Primer Apellido*" required value={formData.apellido_1} onChange={handleChange('apellido_1')} />
-          <input className="input-field" type="text" placeholder="Segundo Apellido" value={formData.apellido_2} onChange={handleChange('apellido_2')} />
-        </div>
-
-        <div className="flex-row">
-          <select className="input-field select-custom" value={formData.tipo_documento} onChange={handleChange('tipo_documento')}>
-            <option value="CC">C.C.</option>
-            <option value="TI">T.I.</option>
-            <option value="CE">C.E.</option>
-          </select>
-          <input className="input-field" type="text" placeholder="Número Documento*" required value={formData.documento} onChange={handleChange('documento')} />
-        </div>
-
-        <div className="flex-row">
-          {/* AQUÍ ESTÁ EL SELECTOR DE ROL RESTRINGIDO */}
-          <select 
-            className="input-field select-custom" 
-            style={{ backgroundColor: '#e3f2fd', fontWeight: 'bold', borderColor: '#1976d2' }}
-            value={formData.rol} 
-            onChange={handleChange('rol')}
-          >
-            <option value="2">Rol: Técnico</option>
-            <option value="3">Rol: Administrador</option>
-          </select>
-
-          <input className="input-field" type="text" placeholder="Teléfono" required value={formData.telefono} onChange={handleChange('telefono')} />
-        </div>
-
-        <div className="flex-row">
-          <div style={{ width: '100%', textAlign: 'left' }}>
-            <label style={{ fontSize: '11px', color: '#666', marginLeft: '5px' }}>Fecha Nacimiento*</label>
-            <input className="input-field" type="date" required value={formData.fecha_nacimiento} onChange={handleChange('fecha_nacimiento')} />
+      <form className="registro-personal__formulario" onSubmit={handleSubmit}>
+        <section className="registro-personal__seccion" aria-labelledby="registro-datos-personales">
+          <div className="registro-personal__seccion-titulo">
+            <span className="registro-personal__seccion-icono">
+              <i className="bi bi-person-vcard" aria-hidden="true"></i>
+            </span>
+            <div>
+              <h2 id="registro-datos-personales">Datos personales</h2>
+              <p>Información de identificación del empleado.</p>
+            </div>
           </div>
-          <input className="input-field" style={{ alignSelf: 'flex-end' }} type="text" placeholder="Dirección" required value={formData.direccion} onChange={handleChange('direccion')} />
-        </div>
+          <div className="registro-personal__campos">
+            <label className="registro-personal__campo">
+              <span>Primer nombre <b>*</b></span>
+              <input className="input-field" type="text" autoComplete="given-name" required value={formData.nombre_1} onChange={handleChange('nombre_1')} />
+            </label>
+            <label className="registro-personal__campo">
+              <span>Segundo nombre</span>
+              <input className="input-field" type="text" autoComplete="additional-name" value={formData.nombre_2} onChange={handleChange('nombre_2')} />
+            </label>
+            <label className="registro-personal__campo">
+              <span>Primer apellido <b>*</b></span>
+              <input className="input-field" type="text" autoComplete="family-name" required value={formData.apellido_1} onChange={handleChange('apellido_1')} />
+            </label>
+            <label className="registro-personal__campo">
+              <span>Segundo apellido</span>
+              <input className="input-field" type="text" value={formData.apellido_2} onChange={handleChange('apellido_2')} />
+            </label>
+            <label className="registro-personal__campo">
+              <span>Tipo de documento</span>
+              <select className="input-field select-custom" value={formData.tipo_documento} onChange={handleChange('tipo_documento')}>
+                <option value="CC">Cédula de ciudadanía</option>
+                <option value="TI">Tarjeta de identidad</option>
+                <option value="CE">Cédula de extranjería</option>
+              </select>
+            </label>
+            <label className="registro-personal__campo">
+              <span>Número de documento <b>*</b></span>
+              <input className="input-field" type="text" autoComplete="off" required value={formData.documento} onChange={handleChange('documento')} />
+            </label>
+            <label className="registro-personal__campo">
+              <span>Fecha de nacimiento <b>*</b></span>
+              <input className="input-field" type="date" autoComplete="bday" required value={formData.fecha_nacimiento} onChange={handleChange('fecha_nacimiento')} />
+            </label>
+          </div>
+        </section>
 
-        {/* CAMPO DE CORREO (NO HAY CONTRASEÑA) */}
-        <input className="input-field" type="email" placeholder="Correo Electrónico (Para enviar credenciales)*" required value={formData.email} onChange={handleChange('email')} />
+        <section className="registro-personal__seccion" aria-labelledby="registro-datos-contacto">
+          <div className="registro-personal__seccion-titulo">
+            <span className="registro-personal__seccion-icono">
+              <i className="bi bi-envelope-paper" aria-hidden="true"></i>
+            </span>
+            <div>
+              <h2 id="registro-datos-contacto">Datos de contacto</h2>
+              <p>Usaremos estos datos para comunicarnos con el empleado.</p>
+            </div>
+          </div>
+          <div className="registro-personal__campos">
+            <label className="registro-personal__campo">
+              <span>Correo electrónico <b>*</b></span>
+              <input className="input-field" type="email" autoComplete="email" required value={formData.email} onChange={handleChange('email')} />
+            </label>
+            <label className="registro-personal__campo">
+              <span>Teléfono <b>*</b></span>
+              <input className="input-field" type="tel" autoComplete="tel" required value={formData.telefono} onChange={handleChange('telefono')} />
+            </label>
+            <label className="registro-personal__campo registro-personal__campo--completo">
+              <span>Dirección <b>*</b></span>
+              <input className="input-field" type="text" autoComplete="street-address" required value={formData.direccion} onChange={handleChange('direccion')} />
+            </label>
+          </div>
+        </section>
 
-        <button type="submit" className="btn-enviar-registro" style={{ width: '100%', marginTop: '20px' }} disabled={loading}>
-          {loading ? 'Generando y Registrando...' : 'Registrar Empleado'}
-        </button>
+        <section className="registro-personal__seccion registro-personal__seccion--acceso" aria-labelledby="registro-acceso">
+          <div className="registro-personal__seccion-titulo">
+            <span className="registro-personal__seccion-icono">
+              <i className="bi bi-shield-check" aria-hidden="true"></i>
+            </span>
+            <div>
+              <h2 id="registro-acceso">Acceso al sistema</h2>
+              <p>Define el perfil que tendrá dentro de la plataforma.</p>
+            </div>
+          </div>
+          <label className="registro-personal__campo">
+            <span>Rol del empleado <b>*</b></span>
+            <select className="input-field select-custom" value={formData.rol} onChange={handleChange('rol')}>
+              <option value="2">Técnico</option>
+              <option value="3">Administrador</option>
+            </select>
+          </label>
+          <div className="registro-personal__nota">
+            <i className="bi bi-info-circle-fill" aria-hidden="true"></i>
+            <p>Generaremos una contraseña segura y enviaremos las credenciales al correo indicado.</p>
+          </div>
+        </section>
 
+        <footer className="registro-personal__pie">
+          <span><b>*</b> Campos obligatorios</span>
+          <button type="submit" className="registro-personal__enviar" disabled={loading}>
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                Registrando empleado...
+              </>
+            ) : (
+              <>
+                <i className="bi bi-person-check-fill" aria-hidden="true"></i>
+                Registrar empleado
+              </>
+            )}
+          </button>
+        </footer>
       </form>
-    </div>
+    </section>
   );
 };
 

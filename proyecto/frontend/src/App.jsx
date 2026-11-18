@@ -6,7 +6,6 @@ import InformacionPaso1 from './components/client/infoFormulario';
 import Formulario from "./components/client/solicitudFormulario";
 import ValidarInformacion from "./components/client/validarServicio";
 import ServicioConfirmado from "./components/client/servicioConfirmado";
-import Pago from "./components/client/pago";
 import Stepper from "./components/client/steppers";
 
 // Componentes comunes
@@ -28,6 +27,7 @@ import ClienteDashboard from "./pages/ClienteDashboard";
 import Configuracion from "./pages/Configuracion";
 import AdminDashboard from "./pages/AdminDashboard"; 
 import HistorialVersiones from "./pages/HistorialVersiones";
+import PerfilUsuario from "./pages/PerfilUsuario";
 import './App.css';
 import "./index.css";
 
@@ -106,8 +106,7 @@ function AppContent() {
           {/* LOGIN Y REGISTRO */}
           <Route path="/Login" element={estaAutenticado ? <Navigate to="/" replace /> : <Login setEstaAutenticado={setEstaAutenticado} setRol={setRol} />} />
           <Route path="/Registro" element={estaAutenticado ? <Navigate to="/" replace /> : <Registro />} />
-          
-          <Route path="/Pago" element={<Pago />} />
+          <Route path="/perfil" element={estaAutenticado ? <PerfilUsuario /> : <Navigate to="/Login" replace />} />
           
           {/* RUTAS EXCLUSIVAS DEL CLIENTE */}
           <Route path="/infoUsuario" element={estaAutenticado && (!rol || rol === 'cliente') ? <InformacionPaso1 /> : <Navigate to="/Login" />} />

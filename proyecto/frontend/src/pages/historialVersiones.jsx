@@ -15,7 +15,9 @@ function HistorialVersiones() {
     try {
       setCargando(true);
       
-      const respuesta = await fetch("http://localhost:3001/api/admin/solicitudes");
+      const respuesta = await fetch("http://localhost:3001/api/admin/solicitudes", {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
+      });
       console.log("📍 PASO 2: Respuesta recibida. Status:", respuesta.status);
       
       if (!respuesta.ok) {

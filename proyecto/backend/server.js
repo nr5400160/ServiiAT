@@ -11,6 +11,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import notificacionesRoutes from './routes/notificacionesRoutes.js';
 import tecnicoRoutes from './routes/tecnicoRoutes.js'; // <--- NUEVO IMPORT
 import clienteRoutes from './routes/clienteRoutes.js';
+import pagosRoutes from './routes/pagosRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001; 
@@ -18,7 +19,7 @@ const PORT = process.env.PORT || 3001;
 // 2. MIDDLEWARES GENERALES
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -34,6 +35,7 @@ app.use('/api', adminRoutes); // Asegúrate de que admin y tecnico tengan sus pr
 app.use('/api/tecnico', tecnicoRoutes); // 
 app.use('/api', notificacionesRoutes);
 app.use('/api/cliente', clienteRoutes);
+app.use('/api/pagos', pagosRoutes);
 
 // 4. INICIAR EL SERVIDOR
 app.listen(PORT, () => {

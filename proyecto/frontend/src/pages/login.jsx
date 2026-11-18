@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "./login.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+
 const Login = ({ setEstaAutenticado, setRol }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -15,7 +17,7 @@ const Login = ({ setEstaAutenticado, setRol }) => {
     setLoading(true);
 
     try {
-      const resp = await fetch("http://localhost:3001/api/login", {
+      const resp = await fetch(`${API_URL}/api/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -29,9 +31,15 @@ const Login = ({ setEstaAutenticado, setRol }) => {
       }
 
       // Guardado estandarizado en LocalStorage
-      sessionStorage.setItem("user", JSON.stringify({ id: data.id, nombre: data.nombre, rol: data.rol }));
+      sessionStorage.setItem("user", JSON.stringify({
+        id: data.id,
+        nombre: data.nombre,
+        email: data.email,
+        rol: data.rol
+      }));
       sessionStorage.setItem("token", data.token || data.id);
       sessionStorage.setItem("rol", data.rol);
+      if (data.email) sessionStorage.setItem("userEmail", data.email);
       
       // 👉 ESTA ES LA LÍNEA CLAVE QUE HACE FUNCIONAR EL HISTORIAL DEL CLIENTE
       sessionStorage.setItem("id_usuario", data.id);

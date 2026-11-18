@@ -28,8 +28,11 @@ export const enviarNotificacion = async (req, res) => {
       case "En proceso":
         mensaje = baseHTML("#1abc9c", "Tu solicitud ha sido aprobada tras la revisión. Gracias por confiar en AR Asistencia Técnica.", `<li><strong>Hora programada:</strong> ${hora}</li>`);
         break;
+      case "Aprobada y asignada":
+        mensaje = baseHTML("#1abc9c", "Tu solicitud fue aprobada y asignada a un técnico. El técnico continuará con la revisión y la cotización del servicio.", `<li><strong>Hora programada:</strong> ${hora}</li>`);
+        break;
       case "Cancelado":
-        mensaje = baseHTML("#e74c3c", "Tu solicitud ha sido rechazada por la fecha o hora elegidas, vuelva a enviar la solicitud.", `<li><strong>Hora programada:</strong> ${hora}</li>`);
+        mensaje = baseHTML("#e74c3c", "Tu solicitud fue rechazada. Comunícate con AR Asistencia Técnica si necesitas más información.", `<li><strong>Hora programada:</strong> ${hora}</li>`);
         break;
       case "Finalizado":
         mensaje = baseHTML("#1abc9c", "El servicio ha sido liquidado. Estamos a la espera de la confirmación de tu pago.", `<li><strong>Hora programada:</strong> ${hora}</li>`);
