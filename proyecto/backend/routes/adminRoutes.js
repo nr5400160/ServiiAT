@@ -5,15 +5,13 @@ import {
   registrarUsuarioPorAdmin,
   resolverSolicitud
 } from '../controllers/adminController.js';
-import { requireAuth, requireRole } from '../middleware/authMiddleware.js';
+import { verificarToken, permitirRoles } from '../seguridad/middlewareSeguridad.js';
 
 const router = Router();
 
-router.use('/admin', requireAuth, requireRole('administrador'));
-
-router.get('/admin/solicitudes', obtenerSolicitudes);
-router.get('/admin/tecnicos', obtenerTecnicos);
-router.put('/admin/solicitudes/:id/decision', resolverSolicitud);
-router.post('/admin/crear-usuario', registrarUsuarioPorAdmin);
+router.get('/admin/solicitudes', verificarToken, permitirRoles('administrador'), obtenerSolicitudes);
+router.get('/admin/tecnicos', verificarToken, permitirRoles('administrador'), obtenerTecnicos);
+router.put('/admin/solicitudes/:id/decision', verificarToken, permitirRoles('administrador'), resolverSolicitud);
+router.post('/admin/crear-usuario', verificarToken, permitirRoles('administrador'), registrarUsuarioPorAdmin);
 
 export default router;

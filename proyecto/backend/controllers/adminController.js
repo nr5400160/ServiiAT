@@ -1,14 +1,12 @@
 import { supabase } from '../config/supabase.js';
-import { getSupabaseAdmin } from '../config/supabaseAdmin.js';
 import bcrypt from "bcryptjs";
 
-// ==========================================
+
 // 1. OBTENER SOLICITUDES (ADMIN)
-// ==========================================
+
 export const obtenerSolicitudes = async (req, res) => {
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from('solicitud')
       .select(`
         id_solicitud,
@@ -32,7 +30,7 @@ export const obtenerSolicitudes = async (req, res) => {
     const ordenesPorSolicitud = new Map();
     const solicitudesIds = data.map((solicitud) => solicitud.id_solicitud);
     if (solicitudesIds.length > 0) {
-      const { data: ordenes, error: ordenesError } = await supabaseAdmin
+      const { data: ordenes, error: ordenesError } = await supabase
         .from('orden_servicio')
         .select('id_solicitud, usuario_id_tecnico')
         .in('id_solicitud', solicitudesIds);
@@ -51,7 +49,7 @@ export const obtenerSolicitudes = async (req, res) => {
     )];
     const tecnicosPorId = new Map();
     if (tecnicosIds.length > 0) {
-      const { data: tecnicos, error: tecnicosError } = await supabaseAdmin
+      const { data: tecnicos, error: tecnicosError } = await supabase
         .from('usuario')
         .select('id_usuario, nombre_1, apellido_1')
         .in('id_usuario', tecnicosIds);
@@ -103,8 +101,7 @@ export const obtenerSolicitudes = async (req, res) => {
 
 export const obtenerTecnicos = async (req, res) => {
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await supabase
       .from('usuario')
       .select('id_usuario, nombre_1, apellido_1')
       .eq('id_roles', 2)
@@ -137,8 +134,7 @@ export const resolverSolicitud = async (req, res) => {
   }
 
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    const { data: solicitud, error: solicitudError } = await supabaseAdmin
+    const { data: solicitud, error: solicitudError } = await supabase
       .from('solicitud')
       .select('id_solicitud, fecha_solicitud, hora_servicio, id_estado_solicitud, estado(nombre_estado)')
       .eq('id_solicitud', idSolicitud)
@@ -152,7 +148,7 @@ export const resolverSolicitud = async (req, res) => {
       return res.status(409).json({ error: "Solo se pueden resolver solicitudes pendientes." });
     }
 
-    const { data: ordenExistente, error: ordenError } = await supabaseAdmin
+    const { data: ordenExistente, error: ordenError } = await supabase
       .from('orden_servicio')
       .select('id_orden_servicio, usuario_id_tecnico')
       .eq('id_solicitud', idSolicitud)
@@ -165,7 +161,7 @@ export const resolverSolicitud = async (req, res) => {
         return res.status(409).json({ error: "La solicitud ya fue asignada a un técnico." });
       }
 
-      const { data: estadoCancelado, error: estadoError } = await supabaseAdmin
+      const { data: estadoCancelado, error: estadoError } = await supabase
         .from('estado')
         .select('id_estado')
         .eq('nombre_estado', 'Cancelado')
@@ -173,7 +169,7 @@ export const resolverSolicitud = async (req, res) => {
 
       if (estadoError) throw estadoError;
 
-      const { data: solicitudActualizada, error: actualizarError } = await supabaseAdmin
+      const { data: solicitudActualizada, error: actualizarError } = await supabase
         .from('solicitud')
         .update({ id_estado_solicitud: estadoCancelado.id_estado })
         .eq('id_solicitud', idSolicitud)
@@ -192,7 +188,7 @@ export const resolverSolicitud = async (req, res) => {
       });
     }
 
-    const { data: tecnico, error: tecnicoError } = await supabaseAdmin
+    const { data: tecnico, error: tecnicoError } = await supabase
       .from('usuario')
       .select('id_usuario, id_roles')
       .eq('id_usuario', idTecnico)
@@ -217,7 +213,7 @@ export const resolverSolicitud = async (req, res) => {
 
     if (!ordenExistente?.usuario_id_tecnico) {
       if (ordenExistente) {
-        const { data: ordenAsignada, error: asignarError } = await supabaseAdmin
+        const { data: ordenAsignada, error: asignarError } = await supabase
           .from('orden_servicio')
           .update(datosOrden)
           .eq('id_orden_servicio', ordenExistente.id_orden_servicio)
@@ -230,7 +226,7 @@ export const resolverSolicitud = async (req, res) => {
           return res.status(409).json({ error: "Otro administrador asignó esta solicitud. Actualiza el panel." });
         }
       } else {
-        const { error: crearOrdenError } = await supabaseAdmin
+        const { error: crearOrdenError } = await supabase
           .from('orden_servicio')
           .insert([{
             id_solicitud: idSolicitud,

@@ -1,17 +1,15 @@
-import { getSupabaseAdmin } from '../config/supabaseAdmin.js';
+import { supabase } from '../config/supabase.js';
 
-// ==========================================
 // 1. OBTENER SOLICITUDES (VISTA TÉCNICO)
-// ==========================================
+
 export const obtenerSolicitudesTecnico = async (req, res) => {
   try {
-    const supabaseAdmin = getSupabaseAdmin();
     const idTecnico = Number(req.auth?.id);
     if (!Number.isSafeInteger(idTecnico) || idTecnico <= 0) {
       return res.status(401).json({ error: 'La sesión del técnico no es válida.' });
     }
 
-    const { data: ordenes, error: ordenesError } = await supabaseAdmin
+    const { data: ordenes, error: ordenesError } = await supabase
       .from('orden_servicio')
       .select('id_orden_servicio, id_solicitud, precio_servicio, usuario_id_tecnico')
       .eq('usuario_id_tecnico', idTecnico);
@@ -23,7 +21,7 @@ export const obtenerSolicitudesTecnico = async (req, res) => {
     const ordenesPorSolicitud = new Map(
       ordenes.map((orden) => [String(orden.id_solicitud), orden])
     );
-    const { data: solicitudes, error: solicitudesError } = await supabaseAdmin
+    const { data: solicitudes, error: solicitudesError } = await supabase
       .from('solicitud')
       .select(`
         id_solicitud, 
@@ -41,7 +39,7 @@ export const obtenerSolicitudesTecnico = async (req, res) => {
     if (solicitudesError) throw solicitudesError;
     const solicitudesPagadas = new Set();
     const idsOrden = ordenes.map((orden) => orden.id_orden_servicio);
-    const { data: tickets, error: ticketsError } = await supabaseAdmin
+    const { data: tickets, error: ticketsError } = await supabase
       .from('ticket')
       .select('id_orden_servicio')
       .in('id_orden_servicio', idsOrden);
@@ -94,8 +92,7 @@ export const guardarPrecioServicio = async (req, res) => {
   }
 
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    const { data: solicitud, error: solicitudError } = await supabaseAdmin
+    const { data: solicitud, error: solicitudError } = await supabase
       .from('solicitud')
       .select('id_solicitud, fecha_solicitud, hora_servicio, id_estado_solicitud, estado(nombre_estado)')
       .eq('id_solicitud', idSolicitud)
@@ -107,7 +104,7 @@ export const guardarPrecioServicio = async (req, res) => {
       return res.status(409).json({ error: 'El técnico solo puede cotizar un servicio en proceso o finalizado.' });
     }
 
-    const { data: ordenExistente, error: ordenError } = await supabaseAdmin
+    const { data: ordenExistente, error: ordenError } = await supabase
       .from('orden_servicio')
       .select('id_orden_servicio, precio_servicio, usuario_id_tecnico')
       .eq('id_solicitud', idSolicitud)
@@ -120,7 +117,7 @@ export const guardarPrecioServicio = async (req, res) => {
         return res.status(403).json({ error: 'Este trabajo está asignado a otro técnico.' });
       }
 
-      const { data: ticket, error: ticketError } = await supabaseAdmin
+      const { data: ticket, error: ticketError } = await supabase
         .from('ticket')
         .select('id_ticket')
         .eq('id_orden_servicio', ordenExistente.id_orden_servicio)
@@ -144,7 +141,7 @@ export const guardarPrecioServicio = async (req, res) => {
       }
     }
 
-    const { data: orden, error: guardarError } = await supabaseAdmin
+    const { data: orden, error: guardarError } = await supabase
       .from('orden_servicio')
       .upsert({
         id_solicitud: idSolicitud,
@@ -190,8 +187,7 @@ export const cambiarEstadoPorTecnico = async (req, res) => {
   }
 
   try {
-    const supabaseAdmin = getSupabaseAdmin();
-    const { data: solicitud, error: solicitudError } = await supabaseAdmin
+    const { data: solicitud, error: solicitudError } = await supabase
       .from('solicitud')
       .select('id_solicitud, fecha_solicitud, hora_servicio, id_estado_solicitud, estado(nombre_estado)')
       .eq('id_solicitud', idSolicitud)
@@ -202,7 +198,7 @@ export const cambiarEstadoPorTecnico = async (req, res) => {
       return res.status(404).json({ error: 'No se encontró la solicitud.' });
     }
 
-    const { data: ordenExistente, error: ordenError } = await supabaseAdmin
+    const { data: ordenExistente, error: ordenError } = await supabase
       .from('orden_servicio')
       .select('id_orden_servicio, usuario_id_tecnico')
       .eq('id_solicitud', idSolicitud)
@@ -229,7 +225,7 @@ export const cambiarEstadoPorTecnico = async (req, res) => {
       return res.status(409).json({ error: 'No se puede cambiar el trabajo desde su estado actual.' });
     }
 
-    const { data: estado, error: estadoError } = await supabaseAdmin
+    const { data: estado, error: estadoError } = await supabase
       .from('estado')
       .select('id_estado')
       .eq('nombre_estado', nombreEstado)
@@ -237,7 +233,7 @@ export const cambiarEstadoPorTecnico = async (req, res) => {
 
     if (estadoError) throw estadoError;
 
-    const { error: actualizarOrdenError } = await supabaseAdmin
+    const { error: actualizarOrdenError } = await supabase
       .from('orden_servicio')
       .update({ id_estado_orden: estado.id_estado })
       .eq('id_orden_servicio', ordenExistente.id_orden_servicio)
@@ -245,7 +241,7 @@ export const cambiarEstadoPorTecnico = async (req, res) => {
 
     if (actualizarOrdenError) throw actualizarOrdenError;
 
-    const { data: solicitudActualizada, error: actualizarError } = await supabaseAdmin
+    const { data: solicitudActualizada, error: actualizarError } = await supabase
       .from('solicitud')
       .update({ id_estado_solicitud: estado.id_estado })
       .eq('id_solicitud', idSolicitud)

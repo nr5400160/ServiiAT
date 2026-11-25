@@ -1,12 +1,7 @@
 import { supabase } from '../config/supabase.js';
-import { getSupabaseAdmin } from '../config/supabaseAdmin.js';
 
 export const obtenerHistorialCliente = async (req, res) => {
   const { id } = req.params; // El ID del cliente que inició sesión
-
-  if (Number(id) !== Number(req.auth.id)) {
-    return res.status(403).json({ error: 'No puedes consultar el historial de otro cliente.' });
-  }
 
   try {
     const { data, error } = await supabase
@@ -19,7 +14,7 @@ export const obtenerHistorialCliente = async (req, res) => {
         estado ( nombre_estado ),
         equipo ( nombre_equipo, marca_equipo )
       `)
-      .eq('usuario_id_cliente', id) // <--- Tu llave exacta de Supabase
+      .eq('usuario_id_cliente', id)
       .order('id_solicitud', { ascending: false });
 
     if (error) throw error;
@@ -29,8 +24,7 @@ export const obtenerHistorialCliente = async (req, res) => {
     const solicitudesPagadas = new Set();
 
     if (idsSolicitud.length > 0) {
-      const supabaseAdmin = getSupabaseAdmin();
-      const { data: ordenes, error: ordenesError } = await supabaseAdmin
+      const { data: ordenes, error: ordenesError } = await supabase
         .from('orden_servicio')
         .select('id_orden_servicio, id_solicitud, precio_servicio')
         .in('id_solicitud', idsSolicitud);
@@ -43,7 +37,7 @@ export const obtenerHistorialCliente = async (req, res) => {
 
       const idsOrden = (ordenes || []).map((orden) => orden.id_orden_servicio);
       if (idsOrden.length > 0) {
-        const { data: tickets, error: ticketsError } = await supabaseAdmin
+        const { data: tickets, error: ticketsError } = await supabase
           .from('ticket')
           .select('id_orden_servicio')
           .in('id_orden_servicio', idsOrden);
